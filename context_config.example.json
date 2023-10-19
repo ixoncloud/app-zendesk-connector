@@ -1,0 +1,13 @@
+{
+  "values": {
+    "zendesk_email": "x",
+    "zendesk_token": "y",
+    "zendesk_subdomain": "z",
+    "custom_fields": [
+      {
+        "ixon": "comSerial",
+        "zendesk": 11910782571793
+      }
+    ]
+  }
+}
