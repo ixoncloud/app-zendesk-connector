@@ -58,7 +58,7 @@ The [@ixon-cdk/runner](https://www.npmjs.com/package/@ixon-cdk/runner) page has 
 
 - zendesk_email: is the email address of the zendesk admin
 - zendesk_token: is the token of the zendesk admin: In Admin Center, click Apps and integrations in the sidebar, then select APIs > Zendesk API. Click the Add API token button to the right of Active API tokens. The token is generated and displayed.
-- zendesk_subdomain: is the subdomain of the zendesk admin: https://subdomain.zendesk.com
+- zendesk_subdomain: is the subdomain of the zendesk admin, example: https://ixon.zendesk.com -> ixon
 - custom_fields: is used to map IXON custom field to a Zendesk custom field to automatically add the field value to a Zendesk ticket upon creation. You can add multiple mappings to this array.
   - Create Zendesk custom fields in the Admin Center / Objects and rules / Tickets / Fields
   - create IXON ustom fields in the Admin app / Custom fields
