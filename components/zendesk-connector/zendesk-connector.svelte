@@ -3,11 +3,11 @@
     ComponentContext,
     BackendComponentClient,
     FormDialogResult,
-  } from "@ixon-cdk/types";
+  } from '@ixon-cdk/types';
 
-  import { DateTime } from "luxon";
+  import { DateTime } from 'luxon';
 
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte';
 
   export let context: ComponentContext;
 
@@ -22,7 +22,7 @@
   let webFunctionsClient: BackendComponentClient;
   let tickets: Ticket[] = [];
   let loading = true;
-  let error = "";
+  let error = '';
 
   let contentScrollTop: number;
   let tableWrapper: HTMLDivElement;
@@ -46,8 +46,8 @@
 
   async function getTickets() {
     loading = true;
-    const response = await webFunctionsClient.call("get_zendesk_tickets");
-    if (response.data.status === "error") {
+    const response = await webFunctionsClient.call('get_zendesk_tickets');
+    if (response.data.status === 'error') {
       error = response.data.message;
     } else {
       tickets = response.data.tickets || [];
@@ -57,28 +57,28 @@
 
   async function openFormDialog() {
     const result = await context.openFormDialog({
-      title: "Request Support",
+      title: 'Request Support',
       inputs: [
         {
-          key: "description",
-          type: "Text",
-          label: "How can we help?",
+          key: 'description',
+          type: 'Text',
+          label: 'How can we help?',
           required: true,
         },
         {
-          key: "priority",
-          type: "Selection",
+          key: 'priority',
+          type: 'Selection',
           options: [
-            { value: "low", label: "Low" },
-            { value: "normal", label: "Normal" },
-            { value: "high", label: "High" },
-            { value: "urgent", label: "Urgent" },
+            { value: 'low', label: 'Low' },
+            { value: 'normal', label: 'Normal' },
+            { value: 'high', label: 'High' },
+            { value: 'urgent', label: 'Urgent' },
           ],
-          label: "Priority?",
+          label: 'Priority?',
           required: true,
         },
       ],
-      submitButtonText: context.translate("SUBMIT"),
+      submitButtonText: context.translate('SUBMIT'),
     });
     if (result) {
       handleSubmit(result as FormDialogResult);
@@ -87,15 +87,15 @@
 
   async function openSuccessDialog() {
     const result = await context.openAlertDialog({
-      title: "Support Requested",
+      title: 'Support Requested',
       message:
-        "Your support request has been submitted. Please check your email for a confirmation. It can take a few minutes for your ticket to show up in this overview",
+        'Your support request has been submitted. Please check your email for a confirmation. It can take a few minutes for your ticket to show up in this overview',
     });
   }
 
   async function openDescriptionDialog(ticket: Ticket) {
     const result = await context.openAlertDialog({
-      title: "Ticket Details",
+      title: 'Ticket Details',
       message: ticket.description,
     });
   }
@@ -108,12 +108,12 @@
       priority: result.value.priority,
     };
 
-    const createResponse = await webFunctionsClient.call("create_ticket", {
+    const createResponse = await webFunctionsClient.call('create_ticket', {
       ticket_description: newTicket.description,
       ticket_priority: newTicket.priority,
     });
 
-    if (createResponse.data.status === "success") {
+    if (createResponse.data.status === 'success') {
       await openSuccessDialog();
     }
   }
@@ -192,7 +192,7 @@
                 <td
                   >{ticket.createdAt
                     ? formatDateTime(ticket.createdAt)
-                    : ""}</td
+                    : ''}</td
                 >
                 <td />
               </tr>
@@ -205,8 +205,8 @@
 </div>
 
 <style lang="scss">
-  @import "./styles/card";
-  @import "./styles/button";
+  @import './styles/card';
+  @import './styles/button';
 
   .card-header {
     padding: 4px;
@@ -224,7 +224,7 @@
     left: 0;
     top: 0;
     width: 8px;
-    background: var(--basic);
+    background: var(--card-bg);
 
     &.table-head {
       height: 34px;
@@ -257,7 +257,7 @@
     top: 0;
     height: 36px;
     width: 100%;
-    background: var(--basic);
+    background: var(--card-bg);
     box-shadow: 0 2px 2px 0 var(--card-border-color);
     z-index: 10;
   }
@@ -287,7 +287,7 @@
     }
 
     tbody tr:nth-child(odd) {
-      background-color: #f9f9f9;
+      background-color: color-mix(in srgb, transparent, currentcolor 4%);
     }
 
     tbody tr {
@@ -323,7 +323,7 @@
     thead th {
       position: sticky;
       white-space: nowrap;
-      background: var(--basic);
+      background: var(--card-bg);
       top: 0;
       overflow: hidden;
       text-overflow: ellipsis;
