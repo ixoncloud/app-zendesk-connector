@@ -19,20 +19,11 @@ def get_zendesk_tickets(context: CbcContext):
     if not any(custom_field['value'] for custom_field in custom_fields) or not any(custom_field['id'] for custom_field in custom_fields):
         return {'status': 'error', 'message': 'At least one custom field value is required to map machine to a zendesk ticket. Make sure it has a value in IXON Cloud and is created in Zendesk and configured in the app config'}
 
-    ixon_user = _get_user(context)
-
-    user_response = zenpy_client.search(
-        type='user', email=ixon_user['emailAddress'])
-    user_results = user_response.__dict__['_response_json']['results']
-    if not user_results:
-        return {'status': 'succes', 'tickets': []}
-
     kwargs = {'type': 'ticket', 'sort_by': 'created_at', 'sort_order': 'desc'}
     for custom_field in custom_fields:
         a = f"custom_field_{custom_field['id']}"
         kwargs[a] = custom_field['value']
 
-    user = user_results[0]
     results = zenpy_client.search(**kwargs)
 
     tickets = [ticket for ticket in results]
