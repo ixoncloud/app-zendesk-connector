@@ -7,6 +7,7 @@ from zenpy.lib.api_objects import User, Ticket
 
 import json
 
+
 @CbcContext.expose
 def get_zendesk_tickets(context: CbcContext):
     if not context.agent and not context.asset:
@@ -20,12 +21,13 @@ def get_zendesk_tickets(context: CbcContext):
 
     ixon_user = _get_user(context)
 
-    user_response = zenpy_client.search(type='user', email=ixon_user['emailAddress'])
+    user_response = zenpy_client.search(
+        type='user', email=ixon_user['emailAddress'])
     user_results = user_response.__dict__['_response_json']['results']
     if not user_results:
         return {'status': 'succes', 'tickets': []}
-    
-    kwargs = {'type': 'ticket',  'requester_id': user_results[0]['id'], 'sort_by': 'created_at', 'sort_order': 'desc'}
+
+    kwargs = {'type': 'ticket', 'sort_by': 'created_at', 'sort_order': 'desc'}
     for custom_field in custom_fields:
         a = f"custom_field_{custom_field['id']}"
         kwargs[a] = custom_field['value']
@@ -33,11 +35,12 @@ def get_zendesk_tickets(context: CbcContext):
     user = user_results[0]
     results = zenpy_client.search(**kwargs)
 
-    
-    tickets = [ticket for ticket in results] 
-    tickets = [{'id': ticket.id, 'description': ticket.description, 'status': ticket.status, 'priority': ticket.priority, 'createdAt': ticket.created_at} for ticket in tickets]
-   
-    return {'status': 'success', 'tickets': tickets }
+    tickets = [ticket for ticket in results]
+    tickets = [{'id': ticket.id, 'description': ticket.description, 'status': ticket.status,
+                'priority': ticket.priority, 'createdAt': ticket.created_at} for ticket in tickets]
+
+    return {'status': 'success', 'tickets': tickets}
+
 
 @CbcContext.expose
 def create_ticket(
@@ -46,7 +49,7 @@ def create_ticket(
 
     if not ticket_description or not ticket_priority:
         return {'status': 'error', 'message': 'Ticket description and priority are required'}
-    
+
     ticket_priority = ticket_priority.lower()
     if ticket_priority not in ['low', 'normal', 'high', 'urgent']:
         return {'status': 'error', 'message': 'Ticket priority can only be low, normal, high or urgent'}
@@ -61,19 +64,21 @@ def create_ticket(
     ticket = Ticket(
         requester=User(id=user.id, email=user.email, name=user.name),
         description=ticket_description, priority=ticket_priority,
-        custom_fields=custom_fields) 
+        custom_fields=custom_fields)
     ticket = zenpy_client.tickets.create(ticket)
 
-    if (ticket): 
+    if (ticket):
         return {'status': 'success', 'message': 'Ticket created successfully'}
     else:
         return {'status': 'error', 'message': 'Ticket creation failed'}
+
 
 def _get_user(context: CbcContext):
     response = context.api_client.get(
         'User',
         url_args={'publicId': context.user.public_id})
     return response['data']
+
 
 def _get_zendesk_creds_from_context(context: CbcContext):
     zendesk_creds = {
@@ -95,10 +100,10 @@ def _get_custom_fields_from_context(context: CbcContext, zenpy_client):
 
     for custom_field in custom_fields:
         field_id = custom_field.pop('zendesk')
-        ticket_field = next((field for field in ticket_fields if field.id == field_id), None)
+        ticket_field = next(
+            (field for field in ticket_fields if field.id == field_id), None)
 
         custom_field['id'] = field_id if ticket_field else None
-        custom_field['value'] = context.agent_or_asset.custom_properties.get(custom_field.pop('ixon'))
+        custom_field['value'] = context.agent_or_asset.custom_properties.get(
+            custom_field.pop('ixon'))
     return custom_fields
-    
-    
