@@ -4,9 +4,7 @@
     BackendComponentClient,
     FormDialogResult,
   } from '@ixon-cdk/types';
-
   import { DateTime } from 'luxon';
-
   import { onMount } from 'svelte';
 
   export let context: ComponentContext;
@@ -44,6 +42,12 @@
     contentScrollTop = Math.max(0, tableWrapper.scrollTop);
   };
 
+  function createTooltip(element: HTMLElement, text: string): void {
+    context.createTooltip(element, {
+      message: context.translate(text),
+    });
+  }
+
   async function getTickets() {
     loading = true;
     const response = await webFunctionsClient.call('get_zendesk_tickets');
@@ -64,6 +68,7 @@
           type: 'Text',
           label: 'How can we help?',
           required: true,
+          translate: false,
         },
         {
           key: 'priority',
@@ -78,7 +83,7 @@
           required: true,
         },
       ],
-      submitButtonText: context.translate('SUBMIT'),
+      submitButtonText: context.translate('SUBMIT__FORM'),
     });
     if (result) {
       handleSubmit(result as FormDialogResult);
@@ -142,10 +147,30 @@
   {/if}
   {#if !loading && !error}
     <div class="card-header">
-      <h2>Support Tickets</h2>
-      <button class="button primary add-ticket-button" on:click={openFormDialog}
+      <h3 class="card-title">Support Tickets</h3>
+      <div class="card-header-actions">
+        <button
+          class="icon-button"
+          on:click={openFormDialog}
+          use:createTooltip={'Request support'}
+        >
+          <svg
+            enable-background="new 0 0 24 24"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="currentColor"
+          >
+            <path
+              xmlns="http://www.w3.org/2000/svg"
+              d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"
+            />
+          </svg>
+        </button>
+      </div>
+      <!-- <button class="button primary add-ticket-button" on:click={openFormDialog}
         >Request support</button
-      >
+      > -->
     </div>
     <div class="card-content">
       {#if contentScrollTop > 0}
@@ -205,14 +230,35 @@
 </div>
 
 <style lang="scss">
-  @import './styles/card';
-  @import './styles/button';
+  @import './styles/_card';
+  @import './styles/_button';
+  @import './styles/_icon-button';
 
   .card-header {
-    padding: 4px;
     display: flex;
+    flex-direction: row;
+    align-items: baseline;
     justify-content: space-between;
-    align-items: center;
+
+    .card-header-actions {
+      padding: 8px;
+
+      @media print {
+        display: none;
+      }
+    }
+
+    .button {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-right: 12px;
+      padding-left: 8px;
+      background-color: var(--accent);
+      line-height: 32px;
+      font-size: 14px;
+      color: var(--accent-color);
+    }
   }
 
   .card-content {

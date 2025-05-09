@@ -4,7 +4,6 @@
   user-select: none;
   cursor: pointer;
   outline: 0;
-  background-color: white;
   border: none;
   -webkit-tap-highlight-color: transparent;
   display: inline-block;
@@ -19,7 +18,8 @@
   border-radius: 4px;
   overflow: visible;
   font-size: 16px;
-  color: var(--body-color);
+  background-color: var(--card-bg);
+  color: var(--card-color);
 
   &[hidden] {
     display: none;
@@ -27,8 +27,8 @@
 
   &[disabled],
   &.disabled {
-    background-color: rgba(0, 0, 0, 0.12);
-    color: rgba(0, 0, 0, 0.26);
+    background-color: color-mix(in srgb, transparent, #c3c3c3 54%);
+    color: rgb(0 0 0 / 26%);
     cursor: default;
   }
 
@@ -48,7 +48,7 @@
   }
 
   &.stroked {
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid color-mix(in srgb, transparent, currentcolor 12%);
 
     &[disabled],
     &.disabled {
@@ -80,12 +80,10 @@
   outline: 0;
   border: none;
   background-color: transparent;
-  border: none;
   -webkit-tap-highlight-color: transparent;
   display: inline-block;
   white-space: nowrap;
   text-decoration: none;
-  vertical-align: baseline;
   text-align: center;
   margin: 0;
   overflow: visible;
@@ -96,7 +94,7 @@
   line-height: 40px;
   border-radius: 50%;
   vertical-align: middle;
-  color: var(--body-color);
+  color: currentcolor;
 
   &[hidden] {
     display: none;
@@ -109,7 +107,7 @@
     margin: 8px;
     background-repeat: no-repeat;
     line-height: 24px;
-    fill: currentColor;
+    fill: currentcolor;
     transition: transform 0.2s ease-out;
   }
 }
