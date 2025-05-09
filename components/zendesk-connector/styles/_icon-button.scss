@@ -1,0 +1,37 @@
+.card > .icon-button {
+  background-color: var(--card-bg);
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 11;
+  overflow: hidden;
+
+  svg {
+    opacity: 0.42;
+    transition: 300ms linear;
+  }
+
+  &:hover svg {
+    opacity: 1;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .card > .icon-button {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 960px) {
+  .card:hover > .icon-button {
+    opacity: 1;
+  }
+
+  .card > .icon-button {
+    opacity: 0;
+  }
+}
